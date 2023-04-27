@@ -1,0 +1,41 @@
+import subprocess
+import sys
+import pip
+
+pip.main(['install', 'astropy'])
+
+from astropy.time import Time
+from astropy.coordinates import solar_system_ephemeris, EarthLocation
+from astropy.coordinates import get_body, get_moon
+from astropy.coordinates import SkyCoord, EarthLocation, AltAz
+from astropy import units as u
+
+
+
+
+# Set the time and location of the observer
+t = Time("2023-04-16 17:20:00", scale="utc") # Cairo time
+loc = EarthLocation(lat=30.0444*u.deg, lon=31.2357*u.deg) # Cairo
+
+# Set the solar system ephemeris to DE432s
+solar_system_ephemeris.set('de432s')
+
+# Get the positions of the planets
+planets = ["mercury", "venus", "mars", "jupiter", "saturn", "uranus", "neptune"]
+positions = {}
+for planet in planets:
+    positions[planet] = get_body(planet, t, loc)
+
+# Convert to AltAz frame
+altaz_frame = AltAz(obstime=t, location=loc)
+altaz_positions = {}
+for planet in positions:
+    altaz_positions[planet] = positions[planet].transform_to(altaz_frame)
+    
+# Print the results
+for planet in planets:
+    print(f"{planet.title()}:")
+    print(f"Altitude: {altaz_positions[planet].alt:.5f}")
+    print(f"Azimuth: {altaz_positions[planet].az:.5f}")
+    print(f"Right Ascension: {positions[planet].ra:.5f}")
+    print(f"Declination: {positions[planet].dec:.5f}")

@@ -1,0 +1,27 @@
+# Generate list of synthetic images (for testing):
+import numpy as np
+import random
+images = []
+###############################################################################
+# 5 images, resolution 320*240
+width = 320 
+height =240
+n_frames = 5
+
+for i in range(n_frames):
+    img = np.full((height, width, 3), 0, np.uint8)
+    img[50][30]=random.randint(0, 255)
+    img[140][70]=random.randint(0, 255)
+    img[80][110]=random.randint(0, 255)
+    img[210][150]=random.randint(0, 255)
+    img[20][200]=random.randint(0, 255)
+    img[170][250]=random.randint(0, 255)
+    img[110][300]=random.randint(0, 255)
+
+    
+    
+    
+    
+
+    images.append(img)
+print(images[0])
